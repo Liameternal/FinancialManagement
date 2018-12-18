@@ -9,4 +9,21 @@
     <string name="login_button">注册</string>
     <string name="wrong_account_tip">账号不存在</string>
     <string name="wrong_passwd_tip">密码错误</string>
+
+    <!--记账详细-->
+    <string name="title">主题：</string>
+    <string name="input">收入</string>
+    <string name="output">支出</string>
+    <string name="type">类型：</string>
+    <string name="data">时间：</string>
+    <string name="money">金额：</string>
+    <string name="remarks">备注：</string>
+    <string name="date_picker_title">日期</string>
+    <string name="ensure">保存</string>
+    <string name="cancel">取消</string>
+    <string name="one_more">再来一笔</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
