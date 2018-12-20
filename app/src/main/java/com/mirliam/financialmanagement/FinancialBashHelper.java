@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import static com.mirliam.financialmanagement.FinancialDbSchema.UserTable;
+import static com.mirliam.financialmanagement.FinancialDbSchema.FinancialDetailsTable;
 
 public class FinancialBashHelper extends SQLiteOpenHelper {
 
@@ -23,6 +24,19 @@ public class FinancialBashHelper extends SQLiteOpenHelper {
                 UserTable.Cols.PASSWD +
                 ")"
         );
+
+         db.execSQL("create table " + FinancialDetailsTable.NAME + "(" +
+                "_id integer primary key autoincrement, " +
+                FinancialDetailsTable.Cols.UUID + "," +
+                FinancialDetailsTable.Cols.TITLE + "," +
+                FinancialDetailsTable.Cols.TYPE + "," +
+                FinancialDetailsTable.Cols.DATE + "," +
+                FinancialDetailsTable.Cols.MONEY + "," +
+                FinancialDetailsTable.Cols.REMARK + "," +
+                FinancialDetailsTable.Cols.PICTURE +
+                ")"
+        );
+
     }
 
     @Override

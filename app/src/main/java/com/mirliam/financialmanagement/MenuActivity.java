@@ -1,6 +1,7 @@
 package com.mirliam.financialmanagement;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -78,11 +79,18 @@ public class MenuActivity extends AppCompatActivity  implements View.OnClickList
      */
     private FragmentManager fragmentManager;
 
+    private SQLiteDatabase mDatabaseWriter;
+    private SQLiteDatabase mDatabaseRead;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_menu);
+
+        mDatabaseRead = new FinancialBashHelper(getApplicationContext()).getReadableDatabase();
+        mDatabaseWriter = new FinancialBashHelper(getApplicationContext()).getWritableDatabase();
+
         // 初始化布局元素
         initViews();
 

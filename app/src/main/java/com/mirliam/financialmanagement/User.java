@@ -10,6 +10,10 @@ public class User {
     private String passwd;
     private Context mContext;
 
+    public User(){
+
+    }
+
     public User(Context context, String account, String passwd) {
         mContext = context.getApplicationContext();
 
@@ -17,10 +21,10 @@ public class User {
         this.passwd = passwd;
     }
 
-    public static ContentValues getContentValues(User user){
+    public static ContentValues getContentValues(User user) {
         ContentValues values = new ContentValues();
-        values.put(UserTable.Cols.ACCOUNT,user.account);
-        values.put(UserTable.Cols.PASSWD,user.passwd);
+        values.put(UserTable.Cols.ACCOUNT, user.account);
+        values.put(UserTable.Cols.PASSWD, user.passwd);
 
         return values;
     }

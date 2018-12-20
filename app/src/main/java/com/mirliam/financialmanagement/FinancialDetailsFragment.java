@@ -8,6 +8,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -56,9 +57,6 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
     private static final String ARG_FINANCIALDETAILSID = "financial_details_id";
     private static final String ARG_FINANCIALDETAILSISADD = "financial_details_is_add";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
@@ -100,6 +98,9 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
 
     private int isAdd;
 
+    private SQLiteDatabase mDatabaseWriter;
+    private SQLiteDatabase mDatabaseRead;
+
     public static FinancialDetailsFragment newInstance(UUID uuid, int isAdd) {
         FinancialDetailsFragment fragment = new FinancialDetailsFragment();
         Bundle args = new Bundle();
@@ -112,15 +113,18 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFinancialDetailsLab = FinancialDetailsLab.get(getActivity());
         if (getArguments() != null) {
 
             UUID financialDetailsId = (UUID) getArguments().getSerializable(ARG_FINANCIALDETAILSID);
 
             isAdd = getArguments().getInt(ARG_FINANCIALDETAILSISADD);
-
-            mFinancialDetails = FinancialDetailsLab.get(getActivity()).getFinancialDetails(financialDetailsId);
+            if (isAdd != -1)
+                mFinancialDetails = mFinancialDetailsLab.getFinancialDetails(financialDetailsId);
         }
-        mFinancialDetailsLab = FinancialDetailsLab.get(getActivity());
+
+        mDatabaseRead = new FinancialBashHelper(getContext()).getReadableDatabase();
+        mDatabaseWriter = new FinancialBashHelper(getContext()).getWritableDatabase();
     }
 
     @Override
@@ -242,10 +246,11 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
                 //check data
                 try {
                     if (checkData()) {
-                        if(isAdd==1){
-                            mFinancialDetailsLab.get(getActivity()).deleteFinancialDetails(mFinancialDetails);
+                        if (isAdd == 1) {
+                            mFinancialDetailsLab.updateFinancialDetails(mFinancialDetails);
+                        } else {
+                            mFinancialDetailsLab.addFinancialDetails(mFinancialDetails);
                         }
-                        mFinancialDetailsLab.addFinancialDetails(mFinancialDetails);
                         Toast.makeText(getActivity(), R.string.success_tip, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getActivity(), R.string.failure_tip, Toast.LENGTH_SHORT).show();
@@ -273,9 +278,9 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
             }
         });
 
-        if(isAdd==0){
+        if (isAdd == 0) {
             hideButton();
-        }else if(isAdd ==1){
+        } else if (isAdd == 1) {
             mOneMoreButton.setVisibility(View.GONE);
         }
 

@@ -54,6 +54,7 @@ public class StreamFragment extends Fragment{
             mAdapter = new FinancialDetailsAdapter(financialDetailsList);
             mFinancialDetailsRecycleListView.setAdapter(mAdapter);
         }else {
+            mAdapter.setFinancialDetailsList(financialDetailsList);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -129,6 +130,10 @@ public class StreamFragment extends Fragment{
         @Override
         public int getItemCount() {
             return mFinancialDetailsList.size();
+        }
+
+        public void setFinancialDetailsList(List<FinancialDetails> financialDetailsList){
+            mFinancialDetailsList = financialDetailsList;
         }
     }
 
