@@ -6,9 +6,84 @@
     tools:context=".PersonalSpaceFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/personal_space" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:text="@string/balance"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/balance"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:gravity="left|center_horizontal"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:text="@string/income_of_month"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/income_of_month"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:gravity="left|center"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:text="@string/outcome_of_month"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/outcome_of_month"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:gravity="left|center"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="30sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

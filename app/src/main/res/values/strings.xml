@@ -35,6 +35,11 @@
     <string name="make_det">记一笔</string>
     <string name="stream">流水</string>
 
+    <!--个人中心-->
+    <string name="balance">余额：</string>
+    <string name="income_of_month">本月收入：</string>
+    <string name="outcome_of_month">本月支出：</string>
+
     <!--明细页面-->
 
     <!--错误提示-->
