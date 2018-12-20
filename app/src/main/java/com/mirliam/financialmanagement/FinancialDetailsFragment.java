@@ -1,6 +1,7 @@
 package com.mirliam.financialmanagement;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentUris;
@@ -34,22 +35,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class FinancialDetailsFragment extends Fragment implements View.OnClickListener {
 
-    private String[] TITLE = {"食品","交通","娱乐","购物","通讯","学习","网游","数码","医疗","其他"};
+    private String[] TITLE = {"食品", "交通", "娱乐", "购物", "通讯", "学习", "网游", "数码", "医疗", "其他"};
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_FINANCIALDETAILSID = "financial_details_id";
+    private static final String ARG_FINANCIALDETAILSISADD = "financial_details_is_add";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,6 +85,8 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
     private ArrayAdapter<String> testDataAdapter;
 
     private RadioGroup mInAndOutRadioGroup;
+    private RadioButton mInRadioButton;
+    private RadioButton mOutRadioButton;
 
     private Button mDataButton;
     private EditText mMoneyEditText;
@@ -91,11 +98,13 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
     private Button mCancelButton;
     private Button mOneMoreButton;
 
-    public static FinancialDetailsFragment newInstance(String param1, String param2) {
+    private int isAdd;
+
+    public static FinancialDetailsFragment newInstance(UUID uuid, int isAdd) {
         FinancialDetailsFragment fragment = new FinancialDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_FINANCIALDETAILSID, uuid);
+        args.putInt(ARG_FINANCIALDETAILSISADD, isAdd);
         fragment.setArguments(args);
         return fragment;
     }
@@ -104,13 +113,14 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+            UUID financialDetailsId = (UUID) getArguments().getSerializable(ARG_FINANCIALDETAILSID);
+
+            isAdd = getArguments().getInt(ARG_FINANCIALDETAILSISADD);
+
+            mFinancialDetails = FinancialDetailsLab.get(getActivity()).getFinancialDetails(financialDetailsId);
         }
-
-        mFinancialDetails = new FinancialDetails();
-        mFinancialDetailsLab = FinancialDetailsLab.get(getContext());
-
+        mFinancialDetailsLab = FinancialDetailsLab.get(getActivity());
     }
 
     @Override
@@ -119,40 +129,59 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_financial_details, container, false);
 
+        if (isAdd == 0) {
+            getActivity().setTitle(R.string.check_financial_details_info);
+        } else if (isAdd == 1) {
+            getActivity().setTitle(R.string.modify_financial_details_info);
+        } else {
+            getActivity().setTitle(R.string.add_financial_details_info);
+            mFinancialDetails = new FinancialDetails();
+        }
+
         initUI(v);
 
         initListener(v);
 
         mInAndOutRadioGroup = v.findViewById(R.id.in_and_out);
+        mInRadioButton = v.findViewById(R.id.in);
+        mOutRadioButton = v.findViewById(R.id.out);
+        if (mFinancialDetails.isInOrOut()) {
+            mInRadioButton.setChecked(true);
+        } else {
+            mOutRadioButton.setChecked(true);
+        }
         mInAndOutRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 boolean ischecked = true;
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.in:
                         ischecked = true;
                         break;
                     case R.id.out:
                         ischecked = false;
                         break;
-                    default:break;
+                    default:
+                        break;
                 }
                 mFinancialDetails.setInOrOut(ischecked);
             }
         });
 
-        mDataButton = v.findViewById(R.id.data_of_make_det);
+        mDataButton = v.findViewById(R.id.date_of_make_det);
+        updateDate();
         mDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
-                DataPickerFragment dialog = DataPickerFragment.newInstance(mFinancialDetails.getDate());
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mFinancialDetails.getDate());
                 dialog.setTargetFragment(FinancialDetailsFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);
             }
         });
 
         mMoneyEditText = v.findViewById(R.id.money_of_make_det);
+        mMoneyEditText.setText(String.valueOf(mFinancialDetails.getMoney()));
         mMoneyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -161,16 +190,18 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mFinancialDetails.setMoney(Float.valueOf(s.toString()));
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (!s.toString().equals(""))
+                    mFinancialDetails.setMoney(Float.valueOf(s.toString()));
             }
         });
 
         mRemarksEditText = v.findViewById(R.id.remarks_of_make_det);
+        mRemarksEditText.setText(mFinancialDetails.getRemark());
         mRemarksEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -189,6 +220,7 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
         });
 
         mImageView = v.findViewById(R.id.image_of_make_det);
+        mImageView.setImageBitmap(mFinancialDetails.getPicture());
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,8 +240,19 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 //check data
-                Toast.makeText(getActivity(),"添加成功!",Toast.LENGTH_SHORT).show();
-                mFinancialDetailsLab.addFinancialDetails(mFinancialDetails);
+                try {
+                    if (checkData()) {
+                        if(isAdd==1){
+                            mFinancialDetailsLab.get(getActivity()).deleteFinancialDetails(mFinancialDetails);
+                        }
+                        mFinancialDetailsLab.addFinancialDetails(mFinancialDetails);
+                        Toast.makeText(getActivity(), R.string.success_tip, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.failure_tip, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -225,12 +268,35 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
         mOneMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"----------",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.add_more_tip, Toast.LENGTH_SHORT).show();
+                getActivity().recreate();
             }
         });
 
+        if(isAdd==0){
+            hideButton();
+        }else if(isAdd ==1){
+            mOneMoreButton.setVisibility(View.GONE);
+        }
 
         return v;
+    }
+
+    private void hideButton() {
+        mEnsureButton.setVisibility(View.GONE);
+        mCancelButton.setVisibility(View.GONE);
+        mOneMoreButton.setVisibility(View.GONE);
+    }
+
+    private boolean checkData() throws ParseException {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        Date date = sdf.parse(mDataButton.getText().toString());
+        if (date.getTime() > (new Date()).getTime()) {
+            Toast.makeText(getActivity(), R.string.invalid_date, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void openAlbum() {
@@ -261,7 +327,7 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
             return;
         }
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DataPickerFragment.EXTRA_DATE);
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mFinancialDetails.setDate(date);
             updateDate();
         }
@@ -332,6 +398,10 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             mImageView.setImageBitmap(bitmap);
+            /**
+             * 保存图片
+             */
+            mFinancialDetails.setPicture(bitmap);
         } else {
             Toast.makeText(getActivity(), "failed to get image", Toast.LENGTH_SHORT).show();
         }
@@ -342,6 +412,7 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
      */
     private void initUI(View v) {
         mTitleEditText = v.findViewById(R.id.title_of_make_det);
+        mTitleEditText.setText(mFinancialDetails.getTitle());
     }
 
     /**

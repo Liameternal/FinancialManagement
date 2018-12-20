@@ -17,8 +17,8 @@ public class FinancialDetails {
     public FinancialDetails(){
         mUUID = UUID.randomUUID();
         mInOrOut = true;
-        mTitle = "";
-        mMoney = (float) 0.00;
+        mTitle = "医疗";
+        mMoney = 0;
         mDate = new Date();
         mRemark = "";
     }
@@ -34,6 +34,7 @@ public class FinancialDetails {
     public void setInOrOut(boolean inOrOut) {
         mInOrOut = inOrOut;
     }
+
 
     public String getTitle() {
         return mTitle;

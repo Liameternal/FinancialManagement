@@ -11,11 +11,14 @@
     <string name="wrong_passwd_tip">密码错误</string>
 
     <!--记账详细-->
+    <string name="check_financial_details_info">账单信息</string>
+    <string name="modify_financial_details_info">修改账单信息</string>
+    <string name="add_financial_details_info">记一笔</string>
     <string name="title">主题：</string>
     <string name="input">收入</string>
     <string name="output">支出</string>
     <string name="type">类型：</string>
-    <string name="data">时间：</string>
+    <string name="date">时间：</string>
     <string name="money">金额：</string>
     <string name="remarks">备注：</string>
     <string name="date_picker_title">日期</string>
@@ -23,6 +26,19 @@
     <string name="cancel">取消</string>
     <string name="one_more">再来一笔</string>
 
+    <string name="success_tip">保存成功！</string>
+    <string name="failure_tip">保存失败！</string>
+    <string name="add_more_tip">继续记账吧！</string>
+
+    <!--菜单-->
+    <string name="personal_space">个人空间</string>
+    <string name="make_det">记一笔</string>
+    <string name="stream">流水</string>
+
+    <!--明细页面-->
+
+    <!--错误提示-->
+    <string name="invalid_date">日期不能超过今天！</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

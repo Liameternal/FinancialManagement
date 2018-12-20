@@ -14,18 +14,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DataPickerFragment extends android.support.v4.app.DialogFragment {
+public class DatePickerFragment extends android.support.v4.app.DialogFragment {
 
     public static final String EXTRA_DATE = "com.mirliam.financialmanagement.date";
 
     private static final String ARG_DATE = "date";
     private DatePicker mDatePicker;
 
-    public static DataPickerFragment newInstance(Date date) {
+    public static DatePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
 
-        DataPickerFragment fragment = new DataPickerFragment();
+        DatePickerFragment fragment = new DatePickerFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +40,7 @@ public class DataPickerFragment extends android.support.v4.app.DialogFragment {
         int month = calendar.get(calendar.MONTH);
         int day = calendar.get(calendar.DAY_OF_MONTH);
 
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_data_picker, null);
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_date_picker, null);
 
         mDatePicker = v.findViewById(R.id.dialog_date_picker);
         mDatePicker.init(year, month, day, null);
