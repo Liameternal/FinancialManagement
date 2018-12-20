@@ -248,8 +248,10 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
                     if (checkData()) {
                         if (isAdd == 1) {
                             mFinancialDetailsLab.updateFinancialDetails(mFinancialDetails);
+                            getActivity().finish();
                         } else {
                             mFinancialDetailsLab.addFinancialDetails(mFinancialDetails);
+                            getActivity().finish();
                         }
                         Toast.makeText(getActivity(), R.string.success_tip, Toast.LENGTH_SHORT).show();
                     } else {
@@ -270,6 +272,7 @@ public class FinancialDetailsFragment extends Fragment implements View.OnClickLi
         });
 
         mOneMoreButton = v.findViewById(R.id.one_more_button);
+        mOneMoreButton.setVisibility(View.GONE);
         mOneMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

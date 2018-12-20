@@ -100,6 +100,7 @@ public class StreamFragment extends Fragment{
 
     public class FinancialDetailsAdapter extends RecyclerView.Adapter<FinancialDetailsHolder> {
         private List<FinancialDetails> mFinancialDetailsList;
+        private FinancialDetails mFinancialDetails;
         private int mPosition;
 
         public FinancialDetailsAdapter(List<FinancialDetails> financialDetailsList) {
@@ -122,6 +123,7 @@ public class StreamFragment extends Fragment{
                 @Override
                 public boolean onLongClick(View v) {
                     mPosition = holder.getAdapterPosition();
+                    mFinancialDetails = mFinancialDetailsList.get(mPosition);
                     return false;
                 }
             });
@@ -153,8 +155,9 @@ public class StreamFragment extends Fragment{
                 startActivity(intent);
                 break;
             case 2:
-                FinancialDetailsLab.get(getActivity()).getFinancialDetailsList().remove(mAdapter.mPosition);
+                FinancialDetailsLab.get(getActivity()).deleteFinancialDetails(mAdapter.mFinancialDetails);
                 mAdapter.notifyItemRemoved(mAdapter.mPosition);
+                updateUI();
                 break;
         }
 

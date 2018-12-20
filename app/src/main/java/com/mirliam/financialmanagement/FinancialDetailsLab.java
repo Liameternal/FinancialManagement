@@ -75,8 +75,14 @@ public class FinancialDetailsLab {
     public void addFinancialDetails(FinancialDetails financialDetails) {
         ContentValues contentValues = getContentValues(financialDetails);
 
-        long i=   mDatabase.insert(FinancialDbSchema.FinancialDetailsTable.NAME, null, contentValues);
-        Log.d("ttttt",String.valueOf(i));
+        mDatabase.insert(FinancialDetailsTable.NAME, null, contentValues);
+    }
+
+    public void deleteFinancialDetails(FinancialDetails financialDetails) {
+        mDatabase.delete(FinancialDetailsTable.NAME,
+                FinancialDetailsTable.Cols.UUID+"= ?",
+                new String[]{financialDetails.getId().toString()}
+                );
     }
 
     public void updateFinancialDetails(FinancialDetails financialDetails) {
