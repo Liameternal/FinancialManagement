@@ -27,12 +27,13 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="50dp"
-                    android:text="@string/balance"
+                    android:gravity="left|center"
+                    android:text="@string/profit_and_loss"
                     android:textColor="@android:color/background_dark"
                     android:textSize="30sp" />
 
                 <TextView
-                    android:id="@+id/balance"
+                    android:id="@+id/profit_and_loss"
                     android:layout_width="160dp"
                     android:layout_height="50dp"
                     android:gravity="left|center_horizontal"
@@ -49,6 +50,7 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="50dp"
+                    android:gravity="left|center"
                     android:text="@string/income_of_month"
                     android:textColor="@android:color/background_dark"
                     android:textSize="30sp" />
@@ -71,6 +73,7 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="50dp"
+                    android:gravity="left|center"
                     android:text="@string/outcome_of_month"
                     android:textColor="@android:color/background_dark"
                     android:textSize="30sp" />

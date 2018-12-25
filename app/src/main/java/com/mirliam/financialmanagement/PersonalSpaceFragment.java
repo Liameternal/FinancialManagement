@@ -28,8 +28,8 @@ public class PersonalSpaceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_personal_space, container, false);
 
-        mBalanceTextView = v.findViewById(R.id.balance);
-        mBalanceTextView.setText(getBalance());
+        mBalanceTextView = v.findViewById(R.id.profit_and_loss);
+        mBalanceTextView.setText(getProfitAndLoss());
 
         mInComeTextView = v.findViewById(R.id.income_of_month);
         mInComeTextView.setText(getInCome());
@@ -69,12 +69,12 @@ public class PersonalSpaceFragment extends Fragment {
     }
 
     private void updateUI() {
-        mBalanceTextView.setText(getBalance());
+        mBalanceTextView.setText(getProfitAndLoss());
         mInComeTextView.setText(getInCome());
         mOutComeTextView.setText(getOutCome());
     }
 
-    private String getBalance() {
+    private String getProfitAndLoss() {
         getFinancialDetailsList();
         float balance = 0;
 
