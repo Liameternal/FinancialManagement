@@ -73,16 +73,19 @@ public class LoginActivity extends AppCompatActivity {
                         String passwd = c.getString(c.getColumnIndex(UserTable.Cols.PASSWD));
                         String md5Account = md5(mAccountEditText.getText().toString());
                         String md5Passwd = md5(mPasswdEditText.getText().toString());
-                        if(checkExist(md5Account)){
+                        if (checkExist(mAccountEditText.getText().toString())) {
                             if (account.equals(md5Account) && passwd.equals(md5Passwd)) {
                                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                                 startActivity(intent);
-                                mDatabaseRead.close();
+
                                 Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+                                LoginActivity.this.finish();
+                                return;
                             }
                         }
                         c.moveToNext();
                     }
+                    Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
                 } finally {
                     c.close();
                 }
@@ -93,13 +96,19 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mAccountEditText.equals("") && !mPasswdEditText.equals("")) {
+                if (!mAccountEditText.getText().toString().equals("") && !mPasswdEditText.getText().toString().equals("")) {
                     mUser.setAccount(md5(mAccountEditText.getText().toString()));
                     mUser.setPasswd(md5(mPasswdEditText.getText().toString()));
                 }
-                if (!checkExist(mAccountEditText.getText().toString())) {
-                    addUser(mUser);
-                    Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                if (!mAccountEditText.getText().toString().equals("") && !mPasswdEditText.getText().toString().equals("")) {
+
+                    if (!checkExist(mAccountEditText.getText().toString())) {
+                        addUser(mUser);
+                        Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                    }
 
                 } else {
                     Toast.makeText(LoginActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
@@ -112,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean addUser(User user) {
         ContentValues values = User.getContentValues(user);
         mDatabaseWriter.insert(UserTable.NAME, null, values);
-        mDatabaseWriter.close();
 
         return true;
     }
@@ -137,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         return hex.toString();
     }
 
-    private boolean checkExist(String name){
+    private boolean checkExist(String name) {
         Cursor c = mDatabaseRead.query(UserTable.NAME, null,
                 null,
                 null, null, null, null);
@@ -147,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                 String account = c.getString(c.getColumnIndex(UserTable.Cols.ACCOUNT));
 
                 boolean isequal = md5(name).equals(account);
-                if(isequal){
+                if (isequal) {
                     return true;
                 }
                 c.moveToNext();
