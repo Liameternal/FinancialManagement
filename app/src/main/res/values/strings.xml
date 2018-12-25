@@ -37,9 +37,9 @@
     <string name="stream">流水</string>
 
     <!--个人中心-->
-    <string name="profit_and_loss">盈亏：</string>
-    <string name="income_of_month">本月收入：</string>
-    <string name="outcome_of_month">本月支出：</string>
+    <string name="today">今日：</string>
+    <string name="this_month">本月：</string>
+    <string name="this_year">本年：</string>
 
     <!--明细页面-->
 
